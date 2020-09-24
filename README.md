@@ -1,36 +1,36 @@
 const { mpapi } = require('mpapi');
 
 // Connect to 
-<code>
+<pre><code>
 mpapi.node.setProvider("http://127.0.0.1:8732");
 mpapi.node.setDebugMode(true);
-</code>
+</code></pre>
 
 1. Create new account
-<code>
+<pre><code>
 // Generate seed phrase
 const mnemonic = module.exports.mpapi.crypto.generateMnemonic();
 // Generate new keys of account
 const keys = module.exports.mpapi.crypto.generateKeys(mnemonic);
-</code>
+</code></pre>
 
 2. Get existing account by private key
-<code>
+<pre><code>
 const extractedKeys = module.exports.mpapi.crypto.extractKeys('edsk3uku2wuuMztoazUmusXoRgFYRJyPyN9QYdoPDZo6JEKM3QMd5t');
-</code>
+</code></pre>
 
 3. Get plex_balance
-<code>
+<pre><code>
 const plex_balance = utility.totez(await module.exports.mpapi.rpc.getPlexBalance(extractedKeys.pkh));)
-</code>
+</code></pre>
 
 4. Get mine_balance
-<code>
+<pre><code>
 const mine_balance = utility.totez(await module.exports.mpapi.rpc.getMineBalance(extractedKeys.pkh));
-</code>
+</code></pre>
 
 5. Send mine to another account
-<code>
+<pre><code>
 const operations = await module.exports.mpapi.rpc.mine_transfer(
   extractedKeys.pkh, 
   extractedKeys, 
@@ -38,10 +38,10 @@ const operations = await module.exports.mpapi.rpc.mine_transfer(
   100, // Amount of mine
   1 // Default fee
 );
-</code>
+</code></pre>
 
 6. Send plex to another account
-<code>
+<pre><code>
 const operations = await module.exports.mpapi.rpc.plex_transfer(
   extractedKeys.pkh, 
   extractedKeys, 
@@ -49,48 +49,48 @@ const operations = await module.exports.mpapi.rpc.plex_transfer(
   100, // Amount of plex
   1 // Default fee (mine value)
 );
-</code>
+</code></pre>
 
 7. Set delegate
-<code>
+<pre><code>
 const operations = await module.exports.mpapi.rpc.setDelegate(
   extractedKeys.pkh, 
   extractedKeys, 
   'mp1FCcGeqnRG2wawPaerF7JbY8EQ8dvm8wig', // Delegate address
   1 // Default fee
 );
-</code>
+</code></pre>
 
 8. Undelegate
-<code>
+<pre><code>
 const operations = await module.exports.mpapi.rpc.setDelegate(
   extractedKeys.pkh, 
   extractedKeys, 
   undefined, 
   1 // Default fee
 );
-</code>
+</code></pre>
 
 9. Looging for operation in blocks
-<code>
+<pre><code>
 const blockHash = await module.exports.mpapi.rpc.findOperation(
   'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm',
   50 // Count blocks ago
 );
-</code>
+</code></pre>
 
 10. Get price of plex for one mine
-<code>
+<pre><code>
 const pricePlex = await getPricePlexForOneMine()
-</code>
+</code></pre>
 
 11. Get price of mine for one plex
-<code>
+<pre><code>
 const priceMine = await getPriceMineForOnePlex()
-</code>
+</code></pre>
 
 12. Example of catching errors
-<code>
+<pre><code>
 try {
   const blockHash = await module.exports.mpapi.rpc.findOperation(
     'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm',
@@ -99,4 +99,4 @@ try {
 } catch (error) {
   console.log(error)
 }
-</code>
+</code></pre>
