@@ -641,6 +641,28 @@ node = {
       };
       return rpc.sendOperation(from, operation, keys);
     },
+    getPricePlexForOneMine: async () => {
+      const constants = await rpc.getConstants();
+      if (!constants)
+        throw new Error('error load constants');
+
+      const count_plex_per_block = 
+        constants.endorsers_per_block * (
+          utility.totez(constants.baking_reward_per_endorsement[0]) + 
+          utility.totez(constants.endorsement_reward[0])
+        );
+
+      const delegates = await rpc.getAllActiveDelegates()
+      const mine_balances = await delegates.reduce(async (acc, delegate) => 
+        await acc + utility.totez(await rpc.getStakingMineBalance(delegate)), 
+        0
+      );
+
+      return ((20 / 100) * (mine_balances / count_plex_per_block)) / 43200;
+    },
+    getPriceMineForOnePlex: async () => {
+      return await rpc.getPricePlexForOneMine() / 100;
+    },
     activate: function (keys, pkh, secret) {
       var operation = {
         "kind": "activate_account",
@@ -793,28 +815,4 @@ mpapi = {
 module.exports = {
   defaultProvider,
   mpapi: mpapi,
-};
-
-const getPricePlexForOneMine = async () => {
-  const constants = await module.exports.mpapi.rpc.getConstants();
-  if (!constants)
-    throw new Error('error load constants');
-
-  const count_plex_per_block = 
-    constants.endorsers_per_block * (
-      utility.totez(constants.baking_reward_per_endorsement[0]) + 
-      utility.totez(constants.endorsement_reward[0])
-    );
-
-  const delegates = await module.exports.mpapi.rpc.getAllActiveDelegates()
-  const mine_balances = await delegates.reduce(async (acc, delegate) => 
-    await acc + utility.totez(await module.exports.mpapi.rpc.getStakingMineBalance(delegate)), 
-    0
-  );
-
-  return ((20 / 100) * (mine_balances / count_plex_per_block)) / 43200;
-};
-
-const getPriceMineForOnePlex = async () => {
-  return await getPricePlexForOneMine() / 100;
 };
