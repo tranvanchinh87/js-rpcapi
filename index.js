@@ -795,13 +795,6 @@ module.exports = {
   mpapi: mpapi,
 };
 
-module.exports.mpapi.node.setProvider("http://127.0.0.1:8732");
-module.exports.mpapi.node.setDebugMode(true);
-
-// module.exports.mpapi.crypto.generateKeys(module.exports.mpapi.crypto.generateMnemonic()).then(balance => {
-//   console.log(balance)
-// })
-
 const getPricePlexForOneMine = async () => {
   const constants = await module.exports.mpapi.rpc.getConstants();
   if (!constants)
@@ -825,67 +818,3 @@ const getPricePlexForOneMine = async () => {
 const getPriceMineForOnePlex = async () => {
   return await getPricePlexForOneMine() / 100;
 };
-
-(async () => {
-  // const mnemonic = module.exports.mpapi.crypto.generateMnemonic();
-  // const keys = module.exports.mpapi.crypto.generateKeys(mnemonic);
-  // console.log(keys)
-
-  // const extractedKeys = module.exports.mpapi.crypto.extractKeys('edsk3uku2wuuMztoazUmusXoRgFYRJyPyN9QYdoPDZo6JEKM3QMd5t');
-
-  // const plex_balance = utility.totez(await module.exports.mpapi.rpc.getPlexBalance(extractedKeys.pkh));
-  // console.log('plex_balance', plex_balance)
-
-  // const mine_balance = utility.totez(await module.exports.mpapi.rpc.getMineBalance(extractedKeys.pkh));
-  // console.log('mine_balance', mine_balance)
-
-  // const extractedKeys = module.exports.mpapi.crypto.extractKeys('edsk3uku2wuuMztoazUmusXoRgFYRJyPyN9QYdoPDZo6JEKM3QMd5t');
-  // // const extractedKeys = module.exports.mpapi.crypto.extractKeys(keys.sk);
-  // // console.log(extractedKeys)
-  // const operations = await module.exports.mpapi.rpc.mine_transfer(
-  //   extractedKeys.pkh, 
-  //   extractedKeys, 
-  //   'mp1MN1YB8ofoZokHyUAmH9oYKfxEHqF1XkT7', 
-  //   100, 
-  //   1
-  // );
-  // console.log(operations)
-
-  // const extractedKeys = module.exports.mpapi.crypto.extractKeys('edskRwwUGuGS17CM7dSBgFdmUDC1N2xfediETmyVSgGDPJswE85VxiaUJDAkBpp47ku2EdFZCQSuGLzUKhSwSSgzWdhjyrSJPA');
-  // console.log(extractedKeys)
-  // const operations = await module.exports.mpapi.rpc.setDelegate(
-  //   extractedKeys.pkh, 
-  //   extractedKeys, 
-  //   'mp1FCcGeqnRG2wawPaerF7JbY8EQ8dvm8wig', 
-  //   1
-  // );
-  // console.log(operations)
-
-  // // selfdelegate
-  // const extractedKeys = module.exports.mpapi.crypto.extractKeys('edskRwwUGuGS17CM7dSBgFdmUDC1N2xfediETmyVSgGDPJswE85VxiaUJDAkBpp47ku2EdFZCQSuGLzUKhSwSSgzWdhjyrSJPA');
-  // console.log(extractedKeys)
-  // const operations = await module.exports.mpapi.rpc.setDelegate(
-  //   extractedKeys.pkh, 
-  //   extractedKeys, 
-  //   undefined, 
-  //   1
-  // );
-  // console.log(operations)
-
-  // try {
-  //   const blockHash = await module.exports.mpapi.rpc.findOperation(
-  //     'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm',
-  //     2
-  //   );
-  // } catch (error) {
-  //   console.log(error)
-  // }
-
-  // console.log(await getPricePlexForOneMine());
-  // await getPriceMineForOnePlex();
-
-})()
-
-
-
-
