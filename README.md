@@ -58,13 +58,17 @@ const keys = mpapi.crypto.generateKeys(mnemonic);</code></pre>
   'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm',
   50 // Count blocks ago);</code></pre>
 
-10. Get price of plex for one mine
+10. Looging for operation in blocks
+<pre><code>const blockHash = await mpapi.rpc.awaitOperation(
+  'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm');</code></pre>
+
+11. Get price of plex for one mine
 <pre><code>const pricePlex = await getPricePlexForOneMine()</code></pre>
 
-11. Get price of mine for one plex
+12. Get price of mine for one plex
 <pre><code>const priceMine = await getPriceMineForOnePlex()</code></pre>
 
-12. Example of catching errors
+13. Example of catching errors
 <pre><code>try {
   const blockHash = await mpapi.rpc.findOperation(
     'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm',
