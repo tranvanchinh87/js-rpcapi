@@ -430,43 +430,61 @@ node = {
       };
       return rpc.sendOperation(keys.pkh, operation, keys);
     },
-    getPlexBalance: function (mp1) {
-      return node.query("/chains/main/blocks/head/context/contracts/" + mp1 + "/balance").then(function (r) {
+    getPlexBalance: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/contracts/${mp1}/balance`).then(function (r) {
         return r;
       });
     },
-    getMineBalance: function (mp1) {
-      return node.query("/chains/main/blocks/head/context/contracts/" + mp1 + "/mine_balance").then(function (r) {
+    getMineBalance: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/contracts/${mp1}/mine_balance`).then(function (r) {
         return r;
       });
     },
-    getConstants: function (mp1) {
-      return node.query("/chains/main/blocks/head/context/constants").then(function(c){
+    getConstants: function (block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/constants`).then(function(c){
         if (c) return c;
         return false;
       }).catch(function(){return false});
     },
-    getDelegate: function (mp1) {
-      return node.query("/chains/main/blocks/head/context/contracts/" + mp1 + "/delegate").then(function(r){
+    getDelegate: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/contracts/${mp1}/delegate`).then(function(r){
         if (r) return r;
         return false;
       }).catch(function(){return false});
     },
-    getStakingMineBalance: function (mp1) {
-      return node.query("/chains/main/blocks/head/context/delegates/" + mp1 + "/staking_balance").then(function(staking_balance){
+    getDelegatedAddresses: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}/delegated_contracts`).then(function(r){
+        if (r) return r;
+        return false;
+      }).catch(function(){return false});
+    },
+    getOwnStakingMineBalance: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}/balance`).then(function(r){
+        if (r) return r;
+        return false;
+      }).catch(function(){return false});
+    },
+    getDelegatedBalance: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}/delegated_balance`).then(function(r){
+        if (r) return r;
+        return false;
+      }).catch(function(){return false});
+    },
+    getStakingMineBalance: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}/staking_balance`).then(function(staking_balance){
         return staking_balance;
       }).catch(function(){return false});
     },
-    getAllActiveDelegates: function (mp1) {
-      return node.query("/chains/main/blocks/head/context/delegates?active=true").then(function(delegates){
+    getAllActiveDelegates: function (block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/delegates?active=true`).then(function(delegates){
         return delegates
       }).catch(function(){ return false });
     },
-    getHead: function (prev = 0) {
-      return node.query(`/chains/main/blocks/head-${prev}`);
+    getHead: function (block = 'head') {
+      return node.query(`/chains/main/blocks/${block}`);
     },
-    getHeadHash: function (prev = 0) {
-      return node.query(`/chains/main/blocks/head-${prev}/hash`);
+    getHeadHash: function (block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/hash`);
     },
     call: function (e, d) {
       return node.query(e, d);
@@ -475,7 +493,7 @@ node = {
       let c = 1;
       return new Promise(function(resolve, reject) {
         var repeater = function(blockPrevNumber){
-          rpc.getHead(blockPrevNumber).then(function(h) {
+          rpc.getHead(`head-${blockPrevNumber}`).then(function(h) {
             c++;
             outer:
             for(var i = 3, found = false; i >= 0; i--){
