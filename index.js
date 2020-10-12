@@ -480,6 +480,11 @@ node = {
         return delegates
       }).catch(function(){ return false });
     },
+    getLevelsInCurrentCycle: function (block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/helpers/levels_in_current_cycle`).then(function(info){
+        return info
+      }).catch(function(){ return false });
+    },
     getHead: function (block = 'head') {
       return node.query(`/chains/main/blocks/${block}`);
     },
