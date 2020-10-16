@@ -47,7 +47,7 @@ const defaultProvider = "http://127.0.0.1:8732",
 utility = {
   totez: m => parseInt(m) / 1000000,
   mutez: function (mp) {
-    let r = mp.toFixed(6) * 1000000;
+    let r = Number(Number(mp.toFixed(6) * 1000000).toFixed());
     if (r > 4294967296) r = r.toString();
     return r;
   },
@@ -402,7 +402,7 @@ node = {
         } else {
           if (node.debugMode)
             console.log(http.status, e, o, http.responseText);
-          reject(http.statusText);
+          reject(http.responseText);
         }
       };
       http.onerror = function () {
