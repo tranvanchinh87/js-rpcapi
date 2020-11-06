@@ -480,6 +480,11 @@ node = {
         return delegates
       }).catch(function(){ return false });
     },
+    getCurrentCycle: function (block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/metadata`).then(function(info){
+        return info.level.cycle
+      }).catch(function(){ return false });
+    },
     getLevelsInCurrentCycle: function (block = 'head') {
       return node.query(`/chains/main/blocks/${block}/helpers/levels_in_current_cycle`).then(function(info){
         return info
@@ -664,7 +669,7 @@ node = {
       };
       return rpc.sendOperation(from, operation, keys);
     },
-    getPricePlexForOneMine: async () => {
+    getPricePlexForOneMine: async (total_stake = 0) => {
       const constants = await rpc.getConstants();
       if (!constants)
         throw new Error('error load constants');
@@ -675,16 +680,16 @@ node = {
           utility.totez(constants.endorsement_reward[0])
         );
 
-      const delegates = await rpc.getAllActiveDelegates()
-      const mine_balances = await delegates.reduce(async (acc, delegate) => 
-        await acc + utility.totez(await rpc.getStakingMineBalance(delegate)), 
-        0
-      );
+      // const delegates = await rpc.getAllActiveDelegates()
+      // const mine_balances = total_stake || await delegates.reduce(async (acc, delegate) => 
+      //   await acc + utility.totez(await rpc.getStakingMineBalance(delegate)), 
+      //   0
+      // );
 
-      return ((20 / 100) * (mine_balances / count_plex_per_block)) / 43200;
+      return ((20 / 100) * (total_stake / count_plex_per_block)) / 43200;
     },
-    getPriceMineForOnePlex: async () => {
-      return await rpc.getPricePlexForOneMine() / 100;
+    getPriceMineForOnePlex: async (total_stake = 0) => {
+      return await rpc.getPricePlexForOneMine(total_stake) / 100;
     },
     activate: function (keys, pkh, secret) {
       var operation = {
@@ -824,7 +829,7 @@ utility.mptomin = utility.mutez;
 prefix.MP = new Uint8Array([2,90,121]);
 
 //Expose library
-mpapi = {
+const mpapi = {
   library: library,
   prefix: prefix,
   watermark: watermark,
