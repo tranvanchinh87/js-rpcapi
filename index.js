@@ -480,6 +480,11 @@ node = {
         return delegates
       }).catch(function(){ return false });
     },
+    getBlockRights: function (block = 'head') {
+      return node.query(`/chains/main/blocks/head/helpers/baking_rights?level=${block}`).then(function(info){
+        return info
+      }).catch(function(){ return false });
+    },
     getCurrentCycle: function (block = 'head') {
       return node.query(`/chains/main/blocks/${block}/metadata`).then(function(info){
         return info.level.cycle
