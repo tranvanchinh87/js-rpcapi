@@ -568,6 +568,7 @@ node = {
 
       promises.push(node.query('/chains/main/blocks/head/header'));
 
+      let ops;
       if (Array.isArray(operation)) {
         ops = operation;
       } else {
