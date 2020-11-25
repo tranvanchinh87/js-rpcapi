@@ -452,6 +452,12 @@ node = {
         return false;
       }).catch(function(){return false});
     },
+    getDelegateInfo: function (mp1, block = 'head') {
+      return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}`).then(function(r){
+        if (r) return r;
+        return false;
+      }).catch(function(){return false});
+    },
     getDelegatedAddresses: function (mp1, block = 'head') {
       return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}/delegated_contracts`).then(function(r){
         if (r) return r;
