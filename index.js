@@ -681,8 +681,8 @@ node = {
       };
       return rpc.sendOperation(from, operation, keys);
     },
-    getPricePlexForOneMine: async (total_stake = 0) => {
-      const constants = await rpc.getConstants();
+    getPricePlexForOneMine: async (total_stake = 0, block = 'head') => {
+      const constants = await rpc.getConstants(block);
       if (!constants)
         throw new Error('error load constants');
 
@@ -700,8 +700,8 @@ node = {
 
       return ((20 / 100) * (total_stake / count_plex_per_block)) / 43200;
     },
-    getPriceMineForOnePlex: async (total_stake = 0) => {
-      return await rpc.getPricePlexForOneMine(total_stake) / 100;
+    getPriceMineForOnePlex: async (total_stake = 0, block = 'head') => {
+      return await rpc.getPricePlexForOneMine(total_stake, block) / 100;
     },
     activate: function (keys, pkh, secret) {
       var operation = {
