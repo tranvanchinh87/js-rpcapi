@@ -442,13 +442,7 @@ node = {
     },
     getConstants: function (block = 'head') {
       return node.query(`/chains/main/blocks/${block}/context/constants`).then(function(c){
-        if (c) {
-          if (Number(block) >= 172800 + 7200) {
-            c.baking_reward_per_endorsement = [ '5000000', '750000' ];
-            c.endorsement_reward = [ '5000000', '3333000' ];
-          }
-          return c
-        };
+        if (c) return c;
         return false;
       }).catch(function(){return false});
     },
