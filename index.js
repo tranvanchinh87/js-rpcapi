@@ -281,6 +281,7 @@ crypto = {
     }
   },
   generateMnemonic: () => library.bip39.generateMnemonic(160),
+  validateMnemonic: (m) => library.bip39.validateMnemonic(m),
   checkAddress: function (a) {
     try {
       utility.b58cdecode(a, prefix.mp1);
@@ -320,9 +321,6 @@ crypto = {
       pk: utility.b58cencode(publicKey, prefix.edpk),
       pkh: utility.b58cencode(out, prefix.mp1),
     };
-  },
-  validateMnemonic: function (m) {
-    return library.bip39.validateMnemonic(m);
   },
   generateKeysFromSeedMulti: function (m, p, n) {
     n /= (256 ^ 2);
