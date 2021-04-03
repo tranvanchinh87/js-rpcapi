@@ -321,6 +321,9 @@ crypto = {
       pkh: utility.b58cencode(out, prefix.mp1),
     };
   },
+  validateMnemonic: function (m) {
+    return library.bip39.validateMnemonic(m);
+  },
   generateKeysFromSeedMulti: function (m, p, n) {
     n /= (256 ^ 2);
     const s = library.bip39.mnemonicToSeedSync(m, library.pbkdf2.pbkdf2Sync(p, n.toString(36).slice(2), 0, 32, 'sha512').toString()).slice(0, 32);
