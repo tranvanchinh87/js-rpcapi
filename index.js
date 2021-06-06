@@ -635,7 +635,7 @@ node = {
         library.sodium.crypto_generichash(out, utility.hex2buf(sopbytes))
 
         var oh = utility.b58cencode(out, prefix.o);
-        opOb.protocol = "Pt8PXNHhxJxzNfSA1ZboJG7kD6i29aA7biRYang9HNH4KAUWqcx";
+        opOb.protocol = "Pt4xzupCszbuxgMSWE2WnReY4aryz1Te3pGN78YEkhjss7C1AMK";
         opOb.signature = signed.edsig;
         return node.query('/chains/'+head.chain_id+'/blocks/'+head.hash+'/helpers/preapply/operations', [opOb]);
       })
