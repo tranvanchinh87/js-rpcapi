@@ -487,8 +487,13 @@ node = {
         return delegates
       }).catch(function(){ return false });
     },
-    getBlockRights: function (block = 'head') {
-      return node.query(`/chains/main/blocks/head/helpers/baking_rights?level=${block}`).then(function(info){
+    getBlockBakingRights: function (block = 'head', maxPriority = 999) {
+      return node.query(`/chains/main/blocks/head/helpers/baking_rights?level=${block}&max_priority=${maxPriority}`).then(function(info){
+        return info
+      }).catch(function(){ return false });
+    },
+    getBlockEndorsingRights: function (block = 'head') {
+      return node.query(`/chains/main/blocks/head/helpers/endorsing_rights?level=${block}`).then(function(info){
         return info
       }).catch(function(){ return false });
     },
