@@ -459,6 +459,12 @@ node = {
         return false;
       }).catch(function(){return false});
     },
+    getMempoolOperations: function () {
+      return node.query('/chains/main/mempool/pending_operations').then(function(r){
+        if (r) return r;
+        return false;
+      }).catch(function(){return false});
+    },
     getDelegatedAddresses: function (mp1, block = 'head') {
       return node.query(`/chains/main/blocks/${block}/context/delegates/${mp1}/delegated_contracts`).then(function(r){
         if (r) return r;
