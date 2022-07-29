@@ -580,8 +580,9 @@ node = {
         repeater();
       });
     },
-    sendOperation: function (from, operation, keys) {
-      var hash, counter, pred_block, sopbytes, returnedContracts, opOb, errors = [], opResponse = [];
+
+    buildOperation: function (from, operation, keys) {
+      var counter, opOb;
       var promises = [], requiresReveal=false;
 
       promises.push(node.query('/chains/main/blocks/head/header'));
@@ -633,43 +634,69 @@ node = {
         }
         opOb = {
           "branch": head.hash,
-          "contents": ops
+          "contents": ops,
         }
-        return node.query('/chains/'+head.chain_id+'/blocks/'+head.hash+'/helpers/forge/operations', opOb);
-      })
-      .then(function (f) {
-        var opbytes = f;
-        var signed = crypto.sign(opbytes, keys.sk, watermark.generic);
-        sopbytes = signed.sbytes;
 
-        const out = new Buffer(32);
-        library.sodium.crypto_generichash(out, utility.hex2buf(sopbytes))
-
-        var oh = utility.b58cencode(out, prefix.o);
-        opOb.protocol = "Pt4xzupCszbuxgMSWE2WnReY4aryz1Te3pGN78YEkhjss7C1AMK";
-        opOb.signature = signed.edsig;
-        return node.query('/chains/'+head.chain_id+'/blocks/'+head.hash+'/helpers/preapply/operations', [opOb]);
-      })
-      .then(function (f) {
-        returnedContracts = f;
-        if (!Array.isArray(f)) throw {error: "RPC Fail", errors:[]};
-        for(var i = 0; i < f.length; i++){
-          for(var j = 0; j < f[i].contents.length; j++){
-            opResponse.push(f[i].contents[j]);
-            if (typeof f[i].contents[j].metadata.operation_result != 'undefined' && f[i].contents[j].metadata.operation_result.status == "failed")
-              errors = errors.concat(f[i].contents[j].metadata.operation_result.errors);
+        return node.query('/chains/'+head.chain_id+'/blocks/'+head.hash+'/helpers/forge/operations', opOb).then((opbytes) => {
+          return {
+            opbytes,
+            opOb
           }
-        } 
-        if (errors.length) throw {error: "Operation Failed", errors:errors};
-        return node.query('/injection/operation', sopbytes);
-      })
-      .then(function (f) {
-        
+        });
+      });
+    },
+    signOperation: function (opbytes, keys) {
+      var sopbytes;
+      var signed = crypto.sign(opbytes, keys.sk, watermark.generic);
+      sopbytes = signed.sbytes;
+
+      const out = new Buffer(32);
+      library.sodium.crypto_generichash(out, utility.hex2buf(sopbytes))
+
+      var oh = utility.b58cencode(out, prefix.o);
+      return { sopbytes, signature: signed.edsig };
+    },
+    validateOperation: function (opOb) {
+      return node.query('/chains/main/blocks/head/header').then((head) => {
+        return node.query('/chains/'+head.chain_id+'/blocks/'+head.hash+'/helpers/preapply/operations', [opOb]).then((returnedContracts) => {
+          var errors = [], opResponse = [];
+
+          if (!Array.isArray(returnedContracts)) throw {error: "RPC Fail", errors:[]};
+          for(var i = 0; i < returnedContracts.length; i++){
+            for(var j = 0; j < returnedContracts[i].contents.length; j++){
+              opResponse.push(returnedContracts[i].contents[j]);
+              if (typeof returnedContracts[i].contents[j].metadata.operation_result != 'undefined' && returnedContracts[i].contents[j].metadata.operation_result.status == "failed")
+                errors = errors.concat(returnedContracts[i].contents[j].metadata.operation_result.errors);
+            }
+          } 
+          return { opResponse, errors };
+        });
+      });
+    },
+    broadcastOperation: function (sopbytes) {
+      return node.query('/injection/operation', sopbytes).then(function (f) {
         return {
           hash : f,
-          operations : opResponse
         };
       });
+    },
+
+    sendOperation: function (from, operation, keys) {
+      return rpc.buildOperation(from, operation, keys).then(({ opbytes, opOb }) => {
+        var { sopbytes, signature } = rpc.signOperation(opbytes, keys);
+        opOb.protocol = "Pt4xzupCszbuxgMSWE2WnReY4aryz1Te3pGN78YEkhjss7C1AMK";
+        opOb.signature = signature;
+
+        return rpc.validateOperation(opOb).then(({ errors, opResponse }) => {
+          if (errors.length) throw {error: "Operation Failed", errors:errors};
+          return rpc.broadcastOperation(sopbytes).then(({ hash }) => {
+            return {
+              hash,
+              opResponse,
+            }
+          })
+        })
+      })
     },
     plex_transfer: function (from, keys, to, amount, fee) {
       var operation = {
