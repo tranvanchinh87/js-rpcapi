@@ -4,13 +4,13 @@ const { mpapi } = require('mpapi');
 <pre><code>mpapi.node.setProvider("http://127.0.0.1:8732");
 mpapi.node.setDebugMode(true);</code></pre>
 
-1. Create new account
+1. Create
 <pre><code>// Generate seed phrase
 const mnemonic = mpapi.crypto.generateMnemonic();
 // Generate new keys of account
 const keys = mpapi.crypto.generateKeys(mnemonic);</code></pre>
 
-2. Get existing account by private key
+
 <pre><code>const extractedKeys = mpapi.crypto.extractKeys('edsk3uku2wuuMztoazUmusXoRgFYRJyPyN9QYdoPDZo6JEKM3QMd5t');</code></pre>
 
 3. Get plex_balance
