@@ -1,8 +1,6 @@
 const { mpapi } = require('mpapi');
 
-// Connect to 
-<pre><code>mpapi.node.setProvider("http://127.0.0.1:8732");
-mpapi.node.setDebugMode(true);</code></pre>
+
 
 1. Create new account
 <pre><code>// Generate seed phrase
@@ -62,12 +60,3 @@ const keys = mpapi.crypto.generateKeys(mnemonic);</code></pre>
 <pre><code>const blockHash = await mpapi.rpc.awaitOperation(
   'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm');</code></pre>
 
-12. Example of catching errors
-<pre><code>try {
-  const blockHash = await mpapi.rpc.findOperation(
-    'oo7D7FnyLeDL9VCNiXWY9cty8MvTzX8HDSGmuqGDfSNSwnwLogm',
-    2
-  );
-} catch (error) {
-  console.log(error)
-}</code></pre>
